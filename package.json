@@ -1,0 +1,39 @@
+{
+  "name": "matrix-reduction",
+  "version": "0.0.1",
+  "description": "POC matrix reduction program, trying out some numerics in node",
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:AlexanderPruss/MatrixReduction.git"
+  },
+  "bin": {
+    "matrix-stuff": "dist/index.js"
+  },
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist",
+    "devstart": "nodemon dist",
+    "test": "tsc && mocha dist/**/*.spec.js --exit",
+    "test-clean": "rm -rf dist && npm run build && npm run test",
+    "test-report": "touch report.xml && JUNIT_REPORT_PATH=report.xml mocha 'dist/**/*.spec.js' --colors --reporter mocha-jenkins-reporter --timeout 20000 --exit",
+    "tsc": "tsc"
+  },
+  "author": "Alexander Pruss",
+  "license": "MIT",
+  "dependencies": {
+    "nodemon": "^1.18.7",
+    "winston": "^3.2.1"
+  },
+  "devDependencies": {
+    "@types/chai": "^4.1.7",
+    "@types/chai-as-promised": "^7.1.0",
+    "@types/mocha": "^5.2.5",
+    "@types/node": "^10.11.4",
+    "chai": "^4.2.0",
+    "chai-as-promised": "^7.1.1",
+    "mocha": "^5.2.0",
+    "mocha-jenkins-reporter": "^0.4.1",
+    "ts-node": "^7.0.1",
+    "typescript": "^3.1.1"
+  }
+}
