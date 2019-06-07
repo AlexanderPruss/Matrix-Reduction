@@ -14,3 +14,4 @@ https://circleci.com/gh/AlexanderPruss/Matrix-Reduction
 # Future Improvements
 
 * Add a more intelligent way to factor a number into prime factors
+* Having better immutable types would be helpful

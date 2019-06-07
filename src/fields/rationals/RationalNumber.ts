@@ -3,12 +3,12 @@ import {FactoredNaturalNumber} from "./FactoredNaturalNumber";
 export class RationalNumber {
 
     numerator: FactoredNaturalNumber;
-    denomenator: FactoredNaturalNumber;
+    denominator: FactoredNaturalNumber;
     sign: Sign;
 
     constructor(numerator: FactoredNaturalNumber, denominator: FactoredNaturalNumber = new FactoredNaturalNumber(1), sign: Sign = Sign.POSITIVE) {
         this.numerator = numerator;
-        this.denomenator = denominator;
+        this.denominator = denominator;
         this.sign = sign;
     }
 }
