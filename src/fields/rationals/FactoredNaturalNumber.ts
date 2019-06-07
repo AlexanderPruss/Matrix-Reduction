@@ -9,5 +9,4 @@ export class FactoredNaturalNumber {
 
     value: number;
     primeFactors: number[];
-
 }

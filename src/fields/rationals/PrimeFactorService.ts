@@ -3,10 +3,26 @@ import {FactoredNaturalNumber} from "./FactoredNaturalNumber";
 
 export class PrimeFactorService {
 
+    clone(factoredNumber: FactoredNaturalNumber) : FactoredNaturalNumber {
+            return {
+                value: factoredNumber.value,
+                primeFactors: [...factoredNumber.primeFactors]
+            };
+    }
+
     createFactoredNumber(value: number): FactoredNaturalNumber {
         return {
             value: value,
             primeFactors: this.factor(value),
+        }
+    }
+
+    createFactoredNumberFromFactors(factors: number[]): FactoredNaturalNumber {
+        let value = 1;
+        factors.forEach(factor => value *= factor);
+        return {
+            value: value,
+            primeFactors: [...factors],
         }
     }
 
