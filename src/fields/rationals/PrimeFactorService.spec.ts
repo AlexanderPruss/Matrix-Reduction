@@ -50,4 +50,68 @@ describe("PrimeFactorService", () => {
 
     });
 
+    describe("#combineDenominators", () => {
+
+        it('combines two denominators with partial overlap', function () {
+            const firstDenominator = [3, 3, 5, 7, 7, 11];
+            const secondDenominator = [7, 11, 13, 13];
+
+            const [commonDenominator, firstMultiplier, secondMultiplier] = primeFactorService.combineDenominators(
+                firstDenominator, secondDenominator);
+
+            expect(commonDenominator).to.eql([3, 3, 5, 7, 7, 11, 13, 13]);
+            expect(firstMultiplier).to.eql(13 * 13);
+            expect(secondMultiplier).to.eql(3 * 3 * 5 * 7);
+        });
+
+        it('combines two denominators when the first denominator is contained in the second', function () {
+            const firstDenominator = [3, 3, 5, 7];
+            const secondDenominator = [3, 3, 5, 5, 7, 11];
+
+            const [commonDenominator, firstMultiplier, secondMultiplier] = primeFactorService.combineDenominators(
+                firstDenominator, secondDenominator);
+
+            expect(commonDenominator).to.eql([3, 3, 5, 5, 7, 11]);
+            expect(firstMultiplier).to.eql(5 * 11);
+            expect(secondMultiplier).to.eql(1);
+        });
+
+        it('combines two denominators when the second denominator is contained in the first', function () {
+            const secondDenominator = [3, 3, 5, 7];
+            const firstDenominator = [3, 3, 5, 5, 7, 11];
+
+            const [commonDenominator, firstMultiplier, secondMultiplier] = primeFactorService.combineDenominators(
+                firstDenominator, secondDenominator);
+
+            expect(commonDenominator).to.eql([3, 3, 5, 5, 7, 11]);
+            expect(secondMultiplier).to.eql(5 * 11);
+            expect(firstMultiplier).to.eql(1);
+        });
+
+        it('can handle the first denominator being 1', function () {
+            const firstDenominator = [];
+            const secondDenominator = [3, 5, 7];
+
+            const [commonDenominator, firstMultiplier, secondMultiplier] = primeFactorService.combineDenominators(
+                firstDenominator, secondDenominator);
+
+            expect(commonDenominator).to.eql([3, 5, 7]);
+            expect(firstMultiplier).to.eql(3 * 5 * 7);
+            expect(secondMultiplier).to.eql(1);
+        });
+
+        it('can handle the second denominator being 1', function () {
+            const secondDenominator = [];
+            const firstDenominator = [3, 5, 7];
+
+            const [commonDenominator, firstMultiplier, secondMultiplier] = primeFactorService.combineDenominators(
+                firstDenominator, secondDenominator);
+
+            expect(commonDenominator).to.eql([3, 5, 7]);
+            expect(secondMultiplier).to.eql(3 * 5 * 7);
+            expect(firstMultiplier).to.eql(1);
+        });
+
+    });
+
 });

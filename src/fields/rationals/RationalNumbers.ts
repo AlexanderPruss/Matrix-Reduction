@@ -1,11 +1,10 @@
 import {RationalNumber, Sign} from "./RationalNumber";
 import {Field} from "../Field";
-import {FactoredNaturalNumber} from "./FactoredNaturalNumber";
 
 export class RationalNumbers implements Field<RationalNumber> {
 
-    static ONE = new RationalNumber(new FactoredNaturalNumber(1));
-    static ZERO = new RationalNumber(new FactoredNaturalNumber(0));
+    static ZERO = new RationalNumber({value: 0, primeFactors: []});
+    static ONE = new RationalNumber({value: 1, primeFactors: []});
 
     add(first: RationalNumber, second: RationalNumber): RationalNumber {
         return undefined;

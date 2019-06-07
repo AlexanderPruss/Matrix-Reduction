@@ -3,7 +3,7 @@ import {FactoredNaturalNumber} from "./FactoredNaturalNumber";
 
 export class PrimeFactorService {
 
-    createFactoredNumber(value: number) : FactoredNaturalNumber {
+    createFactoredNumber(value: number): FactoredNaturalNumber {
         return {
             value: value,
             primeFactors: this.factor(value),
@@ -51,12 +51,48 @@ export class PrimeFactorService {
 
         //If the value is still not equal to one, but there are no further prime factors smaller than sqrt(value),
         //then the remaining value must also be prime.
-        if(value != 1) {
+        if (value != 1) {
             factors.push(value);
         }
 
         return factors;
     }
+
+    /**
+     * Finds the least common denominator of the two denominators. Outputs the LCD, as well as the multipliers that need
+     * to be applied to the first and second fraction, respectively
+     * @param firstDenominatorFactors
+     * @param secondDenominatorFactors
+     */
+    combineDenominators(firstDenominatorFactors: number[], secondDenominatorFactors: number[]): [number[], number, number] {
+        const commonDenominator = [...firstDenominatorFactors];
+        let firstMultiplier = 1;
+        let secondMultiplier = 1;
+
+        //Cloning the lists to avoid mutability headaches
+        const firstFactors = [...firstDenominatorFactors];
+        const secondFactors = [...secondDenominatorFactors];
+
+        for (const factor of firstFactors) {
+            const index = secondFactors.findIndex(number => number == factor);
+
+            //If a number is present in one list but not the other, the second list has to be multiplied by this number.
+            if (index == -1) {
+                secondMultiplier *= factor;
+                continue;
+            }
+            secondFactors.splice(index, 1);
+        }
+
+        //The second list of factors now only contains factors that were missing from the first list.
+        secondFactors.forEach(factor => firstMultiplier *= factor);
+        commonDenominator.push(...secondFactors);
+
+        commonDenominator.sort((a: number, b: number) => a - b);
+
+        return [commonDenominator, firstMultiplier, secondMultiplier];
+    }
+
 }
 
 export default new PrimeFactorService();
