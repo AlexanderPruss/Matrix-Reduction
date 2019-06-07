@@ -22,7 +22,7 @@ export class FactoredNaturalNumber {
      *
      * @param value
      */
-    factor(value: number): number[] {
+    private factor(value: number): number[] {
         //might as well be defensive
         if (value < 0) {
             const message = "Attempted to factor a negative natural number.";
@@ -46,12 +46,18 @@ export class FactoredNaturalNumber {
         }
 
         let primeCandidate = 3;
-        while (primeCandidate * primeCandidate < value) {
+        while (primeCandidate * primeCandidate <= value) {
             while (value % primeCandidate == 0) {
                 factors.push(primeCandidate);
                 value = value / primeCandidate;
             }
             primeCandidate += 2;
+        }
+
+        //If the value is still not equal to one, but there are no further prime factors smaller than sqrt(value),
+        //then the remaining value must also be prime.
+        if(value != 1) {
+            factors.push(value);
         }
 
         return factors;
