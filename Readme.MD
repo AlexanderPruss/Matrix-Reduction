@@ -6,3 +6,5 @@ at it.
 # Usage
 
 # Future Improvements
+
+* Add a more intelligent way to factor a number into prime factors
