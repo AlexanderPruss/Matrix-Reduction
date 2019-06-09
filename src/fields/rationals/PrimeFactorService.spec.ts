@@ -162,14 +162,18 @@ describe("PrimeFactorService", () => {
             expect(reducedNumber).to.eql(expectedRationalNumber);
         });
 
-        it('does nothing if the numerator is zero', function () {
+        it('returns 0/1 if the numerator is zero', function () {
             const rationalNumber = new RationalNumber(
                 primeFactorService.createFactoredNumber(0),
                 primeFactorService.createFactoredNumberFromFactors([5, 7, 7, 11]),
                 Sign.NEGATIVE);
+            const expectedRationalNumber = new RationalNumber(
+                primeFactorService.createFactoredNumber(0),
+                primeFactorService.createFactoredNumber(1),
+                Sign.NEGATIVE);
             const reducedNumber = primeFactorService.reduce(rationalNumber);
 
-            expect(reducedNumber).to.eql(rationalNumber);
+            expect(reducedNumber).to.eql(expectedRationalNumber);
         });
 
         it('does nothing if the numerator is one', function () {

@@ -1,17 +1,17 @@
 import logger from "../../logging/Logger";
 import {FactoredNaturalNumber} from "./FactoredNaturalNumber";
-import {RationalNumber} from "./RationalNumber";
+import {RationalNumber, Sign} from "./RationalNumber";
 
 /**
  * Handles various operations involving prime factors, largely for interactions between rationals.
  */
 export class PrimeFactorService {
 
-    clone(factoredNumber: FactoredNaturalNumber) : FactoredNaturalNumber {
-            return {
-                value: factoredNumber.value,
-                primeFactors: [...factoredNumber.primeFactors]
-            };
+    clone(factoredNumber: FactoredNaturalNumber): FactoredNaturalNumber {
+        return {
+            value: factoredNumber.value,
+            primeFactors: [...factoredNumber.primeFactors]
+        };
     }
 
     createFactoredNumber(value: number): FactoredNaturalNumber {
@@ -118,15 +118,15 @@ export class PrimeFactorService {
      *
      * @param rationalNumber
      */
-    reduce(rationalNumber: RationalNumber) : RationalNumber {
+    reduce(rationalNumber: RationalNumber): RationalNumber {
         const numeratorFactors = [...rationalNumber.numerator.primeFactors];
         const denominatorFactors = [...rationalNumber.denominator.primeFactors];
 
-        if(rationalNumber.numerator.value == 0) {
+        if (rationalNumber.numerator.value == 0) {
             return new RationalNumber(
                 this.createFactoredNumber(0),
-                this.createFactoredNumberFromFactors(denominatorFactors),
-                rationalNumber.sign
+                this.createFactoredNumber(1),
+                Sign.POSITIVE
             );
         }
 
@@ -144,7 +144,7 @@ export class PrimeFactorService {
         }
 
         //Annoyingly low-level - the numerator index list is already sorted, it needs to be iterated in reverse order
-        for(let index = numeratorIndicesToRemove.length - 1; index >= 0; index--) {
+        for (let index = numeratorIndicesToRemove.length - 1; index >= 0; index--) {
             numeratorFactors.splice(numeratorIndicesToRemove[index], 1);
         }
 

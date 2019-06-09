@@ -1,6 +1,7 @@
 import {RationalNumber, Sign} from "./RationalNumber";
 import {Field} from "../Field";
 import defaultPrimeFactorService, {PrimeFactorService} from "./PrimeFactorService";
+import logger from "../../logging/Logger";
 
 export class RationalNumbers implements Field<RationalNumber> {
 
@@ -14,8 +15,8 @@ export class RationalNumbers implements Field<RationalNumber> {
             first.denominator.primeFactors, second.denominator.primeFactors);
 
         const denominator = this.primeFactorService.createFactoredNumberFromFactors(lcd);
-        const firstNumeratorValue = first.numerator.value * firstMultiplier * first.sign == Sign.POSITIVE ? 1 : -1;
-        const secondNumeratorValue = second.numerator.value * secondMultiplier * first.sign == Sign.POSITIVE ? 1 : -1;
+        const firstNumeratorValue = first.numerator.value * firstMultiplier * (first.sign == Sign.POSITIVE ? 1 : -1);
+        const secondNumeratorValue = second.numerator.value * secondMultiplier * (second.sign == Sign.POSITIVE ? 1 : -1);
 
         let numeratorValue = firstNumeratorValue + secondNumeratorValue;
         let sign = Sign.POSITIVE;
@@ -36,8 +37,13 @@ export class RationalNumbers implements Field<RationalNumber> {
         //Cloning values to avoid mutability problems
         const numerator = this.primeFactorService.clone(element.numerator);
         const denominator = this.primeFactorService.clone(element.denominator);
-        return new RationalNumber(numerator, denominator,
-            element.sign == Sign.POSITIVE ? Sign.NEGATIVE : Sign.POSITIVE);
+        let sign = element.sign == Sign.POSITIVE ? Sign.NEGATIVE : Sign.POSITIVE;
+
+        //Disallowing "negative zero"
+        if (numerator.value == 0) {
+            sign = Sign.POSITIVE;
+        }
+        return new RationalNumber(numerator, denominator, sign);
     }
 
     /**
@@ -49,13 +55,18 @@ export class RationalNumbers implements Field<RationalNumber> {
      */
     multiply(first: RationalNumber, second: RationalNumber): RationalNumber {
         const numerator = this.primeFactorService.createFactoredNumber(first.numerator.value * second.numerator.value);
-        const denominator = this.primeFactorService.createFactoredNumber(second.numerator.value * second.numerator.value);
+        const denominator = this.primeFactorService.createFactoredNumber(first.denominator.value * second.denominator.value);
         const sign = first.sign == second.sign ? Sign.POSITIVE : Sign.NEGATIVE;
 
         return this.primeFactorService.reduce(new RationalNumber(numerator, denominator, sign));
     }
 
     inverseOf(element: RationalNumber): RationalNumber {
+        if (element.numerator.value == 0) {
+            const message = "Attempted to take the inverse of zero.";
+            logger.error(message);
+            throw new Error(message);
+        }
         const numerator = this.primeFactorService.clone(element.denominator);
         const denominator = this.primeFactorService.clone(element.numerator);
         return new RationalNumber(numerator, denominator, element.sign);
