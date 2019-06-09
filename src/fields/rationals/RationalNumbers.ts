@@ -86,7 +86,17 @@ export class RationalNumbers implements Field<RationalNumber> {
         return `${sign}${element.numerator.value}${denominator}`;
     }
 
+    hasNorm(): boolean {
+        return true;
+    }
 
+    norm(element: RationalNumber): number {
+        return element.numerator.value/element.denominator.value;
+    }
+
+    elementsEqual(first: RationalNumber, second: RationalNumber): boolean {
+        return first.sign == second.sign && this.norm(first) == this.norm(second);
+    }
 
 }
 

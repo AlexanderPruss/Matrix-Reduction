@@ -1,7 +1,6 @@
 import {ReductionEvent} from "./ReductionEvent";
 import {Field} from "../../fields/Field";
 import {ReductionService} from "../ReductionService";
-import defaultReductionService from "../ReductionService";
 import {Matrix} from "../Matrix";
 
 export class SwapReductionEvent<E> implements ReductionEvent<E> {
@@ -9,7 +8,14 @@ export class SwapReductionEvent<E> implements ReductionEvent<E> {
     firstRowIndex: number;
     secondRowIndex: number;
 
-    reductionService: ReductionService = defaultReductionService;
+    reductionService: ReductionService;
+
+    constructor(field: Field<E>, firstRowIndex: number, secondRowIndex: number, reductionService: ReductionService) {
+        this.field = field;
+        this.firstRowIndex = firstRowIndex;
+        this.secondRowIndex = secondRowIndex;
+        this.reductionService = reductionService;
+    }
 
     apply<F extends E>(matrix: Matrix<F>): Matrix<E> {
         return this.reductionService.swapRows(matrix, this.firstRowIndex, this.secondRowIndex);
