@@ -18,7 +18,7 @@ export class ReductionService{
      * @param matrix
      * @param field
      */
-    reduce<E>(matrix: Matrix<E>, field: Field<E>) : [Matrix<E>, ReductionEvent[]] {
+    reduce<E>(matrix: Matrix<E>, field: Field<E>) : [Matrix<E>, ReductionEvent<E>[]] {
         return null;
     }
 
@@ -35,7 +35,7 @@ export class ReductionService{
         return matrix;
     }
 
-    swapRows<E>(originalMatrix: Matrix<E>, field: Field<E>, firstRowIndex: number, secondRowIndex: number) : Matrix<E>{
+    swapRows<E>(originalMatrix: Matrix<E>, firstRowIndex: number, secondRowIndex: number) : Matrix<E>{
         const matrix = this.clone(originalMatrix);
         const firstRow = matrix.rows[firstRowIndex];
         const secondRow = matrix.rows[secondRowIndex];

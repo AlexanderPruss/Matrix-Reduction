@@ -13,13 +13,13 @@ export interface ReductionEvent<E> {
      * Applies the reduction event, moving forward to the next matrix in the reduction process.
      * @param matrix
      */
-    apply<E>(matrix: Matrix<E>) : Matrix<E>;
+    apply<F extends E>(matrix: Matrix<E>): Matrix<E>;
 
     /**
      * Reverse the reduction event, moving back to the previous matrix in the reduction process.
      * @param matrix
      */
-    reverse<E>(matrix: Matrix<E>) : Matrix<E>;
+    reverse<F extends E>(matrix: Matrix<E>): Matrix<E>;
 
-    drawMatrix<E>(matrix: Matrix<E>) : string;
+    drawMatrix<F extends E>(matrix: Matrix<E>): string;
 }
