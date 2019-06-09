@@ -50,7 +50,10 @@ following response:
 Two example matrices can be found in the `examples` folder. You could try them out from inside the app with 
 
 `import examples/nicematrix.txt`
+
 `import examples/complicatedMatrix.txt`
+
+Feel free to write your own matrices to be imported and reduced.
 
 # Continuous Integration
 
