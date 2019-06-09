@@ -1,4 +1,4 @@
-import {defaultMatrix} from "./test-helpers/MatrixProvider.spec";
+import {convertToRationalMatrix, defaultMatrix} from "./test-helpers/MatrixProvider.spec";
 import {ReductionService} from "./ReductionService";
 import {expect} from "chai";
 import {RationalNumbers} from "../fields/rationals/RationalNumbers";
@@ -28,10 +28,34 @@ describe("ReductionService", () => {
 
         it('reduces a matrix to reduced row echelon form, returning the final matrix and all the required steps as events', function () {
             const matrix = defaultMatrix();
+            const expectedMatrix = convertToRationalMatrix([
+                [1, 0, -1],
+                [0, 1, 2],
+                [0, 0, 0]
+            ]);
 
             const [reducedMatrix, events] = reductionService.reduce(matrix, rationalNumbers);
 
-            console.log(reducedMatrix);
+            expect(reducedMatrix).to.eql(expectedMatrix);
+            expect(events).to.have.lengthOf(8);
+        });
+
+        it('reduces a matrix to reduced row echelon form, handling rows of all zeroes correctly', function () {
+            const matrix = convertToRationalMatrix([
+                [1, 0, 3],
+                [4, 0, 6],
+                [7, 0, 9]
+            ]);
+            const expectedMatrix = convertToRationalMatrix([
+                [1, 0, 0],
+                [0, 0, 1],
+                [0, 0, 0]
+            ]);
+
+            const [reducedMatrix, events] = reductionService.reduce(matrix, rationalNumbers);
+
+            expect(reducedMatrix).to.eql(expectedMatrix);
+            expect(events).to.have.lengthOf(8);
         });
     });
 
@@ -48,6 +72,7 @@ describe("ReductionService", () => {
     });
 
     describe("#multiplyRow", () => {
-//TODO: hey, why don't we create the event as part of the function! nice
     });
+
+
 });

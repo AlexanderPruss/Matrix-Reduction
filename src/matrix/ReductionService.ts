@@ -27,26 +27,28 @@ export class ReductionService {
         let matrix = this.clone(originalMatrix);
         const events : ReductionEvent<E>[] = [];
 
+        let destinationForNextPivot = 0;
         for(let columnIndex = 0; columnIndex < matrix.numberOfColumns; columnIndex++) {
-            const column = matrix.getColumn(columnIndex);
+            let column = matrix.getColumn(columnIndex);
 
             //Find the pivot, if one exists, and move it into the diagonal
             const pivotIndex = this.findPivot(column, field, columnIndex);
             if(pivotIndex == -1) {
                 continue;
             }
-            if(columnIndex != pivotIndex) {
+            if(destinationForNextPivot != pivotIndex) {
                 let swapEvent = null;
-                [matrix, swapEvent] = this.swapRows(matrix, field, columnIndex, pivotIndex);
+                [matrix, swapEvent] = this.swapRows(matrix, field, destinationForNextPivot, pivotIndex);
                 events.push(swapEvent);
+                column = matrix.getColumn(columnIndex);
             }
-            const pivot = column[columnIndex];
+            const pivot = column[destinationForNextPivot];
 
             //eliminate other rows
             const zero = field.additiveIdentity();
             const pivotInverse = field.inverseOf(pivot);
             for(let rowIndex = 0; rowIndex < column.length; rowIndex++) {
-                if(rowIndex == columnIndex) {
+                if(rowIndex == destinationForNextPivot) {
                     continue;
                 }
 
@@ -55,25 +57,26 @@ export class ReductionService {
                     continue;
                 }
 
-                const multiplier = field.multiply(element, pivotInverse);
+                const multiplier = field.multiply(element, field.negative(pivotInverse));
                 let additionEvent = null;
-                [matrix, additionEvent] = this.addRows(matrix, field, columnIndex, rowIndex, multiplier);
+                [matrix, additionEvent] = this.addRows(matrix, field, destinationForNextPivot, rowIndex, multiplier);
                 events.push(additionEvent);
             }
 
             //scale down to one
             let multiplicationEvent = null;
-            [matrix, multiplicationEvent] = this.multiplyRow(matrix, field, columnIndex, pivotInverse);
+            [matrix, multiplicationEvent] = this.multiplyRow(matrix, field, destinationForNextPivot, pivotInverse);
             events.push(multiplicationEvent);
+            destinationForNextPivot++;
         }
 
         return [matrix, events];
     }
 
     /**
-     * Finds the row number of the pivot with the smallest norm.
-     * Note that, for some fields, we may want to choose the pivot with the largest norm instead.
-     * This is an easy area for improvement.
+     * Finds the row number of the ideal pivot.
+     * (Ideal here means largest norm, if possible, to keep floating point errors smaller.)
+     * (This isn't relevant for the exact rational representation used in RationalNumbers, but is for e.g. real numbers.)
      *
      * Returns -1 if the eligible part of the column is filled with zeroes.
      * @param column
@@ -89,17 +92,17 @@ export class ReductionService {
             return column.findIndex(element => !field.elementsEqual(zero, element));
         }
 
-        let smallest = field.norm(column[columnIndex]);
+        let largestNorm = field.norm(column[columnIndex]);
         let pivotIndex = columnIndex;
         for(let rowIndex = pivotIndex + 1; rowIndex < column.length; rowIndex++) {
             const norm = field.norm(column[rowIndex]);
-            if(norm < smallest || smallest == 0) {
-                smallest = norm;
+            if(norm > largestNorm) {
+                largestNorm = norm;
                 pivotIndex = rowIndex;
             }
         }
 
-        return smallest > 0 ? pivotIndex : -1;
+        return largestNorm > 0 ? pivotIndex : -1;
     }
 
     addRows<E>(originalMatrix: Matrix<E>, field: Field<E>, rowIndexToAdd: number, rowIndexToAddTo: number, multiplier: E) : [Matrix<E>, AddRowsReductionEvent<E>] {
