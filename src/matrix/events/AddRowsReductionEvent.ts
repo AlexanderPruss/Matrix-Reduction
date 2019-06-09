@@ -20,7 +20,7 @@ export class AddRowsReductionEvent<E> implements ReductionEvent<E> {
     }
 
     apply<F extends E>(matrix: Matrix<F>): Matrix<E> {
-        return this.reductionService.addRows(matrix, this.field, this.rowIndexToAdd, this.rowIndexToAddTo, this.multiplier);
+        return this.reductionService.addRows(matrix, this.field, this.rowIndexToAdd, this.rowIndexToAddTo, this.multiplier)[0];
     }
 
     drawMatrix<E>(matrix: Matrix<E>): string {
@@ -29,7 +29,7 @@ export class AddRowsReductionEvent<E> implements ReductionEvent<E> {
 
     reverse<F extends E>(matrix: Matrix<E>): Matrix<E> {
         return this.reductionService.addRows(matrix, this.field, this.rowIndexToAdd, this.rowIndexToAddTo,
-            this.field.negative(this.multiplier));
+            this.field.negative(this.multiplier))[0];
     }
 
 }

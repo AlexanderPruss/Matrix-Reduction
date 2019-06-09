@@ -18,7 +18,7 @@ export class MultiplyRowsReductionEvent<E> implements ReductionEvent<E> {
     }
 
     apply<F extends E>(matrix: Matrix<F>): Matrix<E> {
-        return this.reductionService.multiplyRow(matrix, this.field, this.rowIndex, this.multiplier);
+        return this.reductionService.multiplyRow(matrix, this.field, this.rowIndex, this.multiplier)[0];
     }
 
     drawMatrix<E>(matrix: Matrix<E>): string {
@@ -27,7 +27,7 @@ export class MultiplyRowsReductionEvent<E> implements ReductionEvent<E> {
 
     reverse<F extends E>(matrix: Matrix<E>): Matrix<E> {
         return this.reductionService.multiplyRow(matrix, this.field, this.rowIndex,
-            this.field.inverseOf(this.multiplier));
+            this.field.inverseOf(this.multiplier))[0];
 
     }
 

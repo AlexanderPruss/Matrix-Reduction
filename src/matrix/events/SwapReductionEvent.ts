@@ -18,7 +18,7 @@ export class SwapReductionEvent<E> implements ReductionEvent<E> {
     }
 
     apply<F extends E>(matrix: Matrix<F>): Matrix<E> {
-        return this.reductionService.swapRows(matrix, this.firstRowIndex, this.secondRowIndex);
+        return this.reductionService.swapRows(matrix, this.field, this.firstRowIndex, this.secondRowIndex)[0];
     }
 
     drawMatrix<E>(matrix: Matrix<E>): string {

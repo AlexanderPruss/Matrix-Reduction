@@ -36,36 +36,44 @@ export class ReductionService {
                 continue;
             }
             if(columnIndex != pivotIndex) {
-                matrix = this.swapRows(matrix, columnIndex, pivotIndex);
-                events.push(new SwapReductionEvent(field, columnIndex, pivotIndex, this));
+                let swapEvent = null;
+                [matrix, swapEvent] = this.swapRows(matrix, field, columnIndex, pivotIndex);
+                events.push(swapEvent);
             }
             const pivot = column[columnIndex];
 
             //eliminate other rows
             const zero = field.additiveIdentity();
             const pivotInverse = field.inverseOf(pivot);
-            for(let rowIndex = columnIndex+1; rowIndex < column.length; rowIndex++) {
+            for(let rowIndex = 0; rowIndex < column.length; rowIndex++) {
+                if(rowIndex == columnIndex) {
+                    continue;
+                }
+
                 const element = column[rowIndex];
                 if(field.elementsEqual(element, zero)) {
                     continue;
                 }
 
                 const multiplier = field.multiply(element, pivotInverse);
-                matrix = this.addRows(matrix, field, columnIndex, rowIndex, multiplier);
-                events.push(new AddRowsReductionEvent(field, columnIndex, rowIndex, multiplier, this));
+                let additionEvent = null;
+                [matrix, additionEvent] = this.addRows(matrix, field, columnIndex, rowIndex, multiplier);
+                events.push(additionEvent);
             }
 
             //scale down to one
-            matrix = this.multiplyRow(matrix, field, columnIndex, pivotInverse);
-            events.push(new MultiplyRowsReductionEvent(field, columnIndex, pivotInverse, this));
+            let multiplicationEvent = null;
+            [matrix, multiplicationEvent] = this.multiplyRow(matrix, field, columnIndex, pivotInverse);
+            events.push(multiplicationEvent);
         }
 
         return [matrix, events];
     }
 
     /**
-     * Finds the row number of the ideal pivot.
-     * (Ideal here means largest norm, if possible, to keep floating point errors smaller.)
+     * Finds the row number of the pivot with the smallest norm.
+     * Note that, for some fields, we may want to choose the pivot with the largest norm instead.
+     * This is an easy area for improvement.
      *
      * Returns -1 if the eligible part of the column is filled with zeroes.
      * @param column
@@ -81,20 +89,20 @@ export class ReductionService {
             return column.findIndex(element => !field.elementsEqual(zero, element));
         }
 
-        let largestNorm = field.norm(column[columnIndex]);
+        let smallest = field.norm(column[columnIndex]);
         let pivotIndex = columnIndex;
         for(let rowIndex = pivotIndex + 1; rowIndex < column.length; rowIndex++) {
             const norm = field.norm(column[rowIndex]);
-            if(norm > largestNorm) {
-                largestNorm = norm;
+            if(norm < smallest || smallest == 0) {
+                smallest = norm;
                 pivotIndex = rowIndex;
             }
         }
 
-        return largestNorm > 0 ? pivotIndex : -1;
+        return smallest > 0 ? pivotIndex : -1;
     }
 
-    addRows<E>(originalMatrix: Matrix<E>, field: Field<E>, rowIndexToAdd: number, rowIndexToAddTo: number, multiplier: E) : Matrix<E> {
+    addRows<E>(originalMatrix: Matrix<E>, field: Field<E>, rowIndexToAdd: number, rowIndexToAddTo: number, multiplier: E) : [Matrix<E>, AddRowsReductionEvent<E>] {
         logger.info(`Adding rows ${rowIndexToAdd} and ${rowIndexToAddTo}`);
 
         const matrix = this.clone(originalMatrix);
@@ -106,10 +114,11 @@ export class ReductionService {
             rowToAddTo[index] = field.add(rowToAddTo[index], numberToAdd);
         }
 
-        return matrix;
+        const event = new AddRowsReductionEvent(field, rowIndexToAdd, rowIndexToAddTo, multiplier, this);
+        return [matrix, event];
     }
 
-    swapRows<E>(originalMatrix: Matrix<E>, firstRowIndex: number, secondRowIndex: number) : Matrix<E>{
+    swapRows<E>(originalMatrix: Matrix<E>, field: Field<E>, firstRowIndex: number, secondRowIndex: number) : [Matrix<E>, SwapReductionEvent<E>]{
         logger.info(`Swapping rows ${firstRowIndex} and ${secondRowIndex}`);
 
         const matrix = this.clone(originalMatrix);
@@ -120,10 +129,11 @@ export class ReductionService {
         matrix.rows[firstRowIndex] = [...secondRow];
         matrix.rows[secondRowIndex] = copyOfFirstRow;
 
-        return matrix;
+        const event = new SwapReductionEvent(field, firstRowIndex, secondRowIndex, this);
+        return [matrix, event];
     }
 
-    multiplyRow<E>(originalMatrix: Matrix<E>, field: Field<E>, rowIndex: number, multiplier: E) : Matrix<E>{
+    multiplyRow<E>(originalMatrix: Matrix<E>, field: Field<E>, rowIndex: number, multiplier: E) : [Matrix<E>, MultiplyRowsReductionEvent<E>]{
         logger.info(`Scaling row ${rowIndex}`);
 
         const matrix = this.clone(originalMatrix);
@@ -133,7 +143,8 @@ export class ReductionService {
             rowToMultiply[index] = field.multiply(rowToMultiply[index], multiplier);
         }
 
-        return matrix;
+        const event = new MultiplyRowsReductionEvent(field, rowIndex, multiplier, this);
+        return [matrix, event];
     }
 
 }
