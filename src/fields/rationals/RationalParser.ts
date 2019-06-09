@@ -29,6 +29,10 @@ export class RationalParser {
         const numerator = this.primeFactorService.createFactoredNumber(numeratorValue);
         const denominator = this.primeFactorService.createFactoredNumber(denominatorValue);
 
+        if(numeratorValue == 0) {
+            sign = Sign.POSITIVE;
+        }
+
         return this.primeFactorService.reduce(new RationalNumber(numerator, denominator, sign));
     }
 
