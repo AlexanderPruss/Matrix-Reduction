@@ -63,6 +63,7 @@ export class ClientEventHandler {
             }
 
             this.readLine.setPrompt("Matrix [<- go back; -> go forward]: ");
+            return;
         }
 
         if (prompt.startsWith("exit")) {
@@ -96,15 +97,22 @@ export class ClientEventHandler {
             return;
         }
 
+        let result: string = "";
         switch (key) {
             case "left":
-                this.currentExecution.goToPreviousMatrix();
-                this.readLine.prompt();
+                result = this.currentExecution.goToPreviousMatrix();
+                if(result != ""){
+                    this.readLine.prompt();
+                }
+                break;
             case "right":
-                this.currentExecution.goToNextMatrix();
-                this.readLine.prompt();
+                result = this.currentExecution.goToNextMatrix();
+                if(result != ""){
+                    this.readLine.prompt();
+                }
+                break;
             default:
-                break
+                break;
         }
 
     }

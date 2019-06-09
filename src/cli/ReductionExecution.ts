@@ -16,6 +16,8 @@ export class ReductionExecution<E> {
     field: Field<E>;
     painter: MatrixPainter;
 
+    appliedLastEvent = false;
+
     constructor(initialMatrix: Matrix<E>, field: Field<E>, painter: MatrixPainter, reductionService: ReductionService) {
         this.initialMatrix = initialMatrix;
         this.currentMatrix = initialMatrix;
@@ -23,28 +25,32 @@ export class ReductionExecution<E> {
         this.painter = painter;
 
         [this.finalMatrix, this.events] = reductionService.reduce(initialMatrix, field);
+        this.redrawMatrix();
     }
 
     redrawMatrix(): string {
         const matrixString = this.painter.printMatrix(this.currentMatrix, this.field.getParser());
-        const enhancedMatrix = this.events[this.currentIndex].drawMatrix(matrixString);
+        const enhancedMatrix = "\n" + this.events[this.currentIndex].drawMatrix(matrixString);
         console.log(enhancedMatrix);
         return enhancedMatrix;
     }
 
     goToNextMatrix(): string {
         this.currentMatrix = this.events[this.currentIndex].apply(this.currentMatrix);
-        if (this.currentIndex + 1 < this.events.length) {
-            this.currentIndex++;
+        if (this.currentIndex + 1 == this.events.length) {
+            return "";
         }
+        this.currentIndex++;
         return this.redrawMatrix();
     }
 
     goToPreviousMatrix(): string {
-        this.currentMatrix = this.events[this.currentIndex].apply(this.currentMatrix);
-        if (this.currentIndex - 1 >= 0) {
-            this.currentIndex--;
+        if(this.currentIndex == 0) {
+            return "";
         }
+        this.currentIndex--;
+        this.currentMatrix = this.events[this.currentIndex].reverse(this.currentMatrix);
+
         return this.redrawMatrix();
     }
 

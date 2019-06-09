@@ -32,7 +32,7 @@ export class AddRowsReductionEvent<E> implements ReductionEvent<E> {
         const startIndex = this.rowIndexToAdd < this.rowIndexToAddTo ? this.rowIndexToAdd : this.rowIndexToAddTo;
         const endIndex = this.rowIndexToAdd < this.rowIndexToAddTo ? this.rowIndexToAddTo : this.rowIndexToAdd;
 
-        for(let rowIndex = startIndex + 1; rowIndex < endIndex - 1; rowIndex++) {
+        for(let rowIndex = startIndex + 1; rowIndex < endIndex; rowIndex++) {
             rows[rowIndex] += "   |"
         }
         rows[this.rowIndexToAdd] += `---- +(${this.parsingService.elementToString(this.multiplier)})`;

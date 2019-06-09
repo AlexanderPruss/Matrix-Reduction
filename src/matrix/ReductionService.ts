@@ -5,6 +5,8 @@ import {SwapReductionEvent} from "./events/SwapReductionEvent";
 import logger from "../logging/Logger";
 import {AddRowsReductionEvent} from "./events/AddRowsReductionEvent";
 import {MultiplyRowsReductionEvent} from "./events/MultiplyRowsReductionEvent";
+import {StartReductionEvent} from "./events/StartReductionEvent";
+import {EndReductionEvent} from "./events/EndReductionEvent";
 
 //I'd much rather just have the field as part of the Matrix, but this isn't doable yet due to typescript generic limitations.
 export class ReductionService {
@@ -70,6 +72,12 @@ export class ReductionService {
             destinationForNextPivot++;
         }
 
+
+        if (events.length > 0) {
+            events[0] = new StartReductionEvent(field, events[0]);
+            events.push(new EndReductionEvent(field, events[events.length - 1]));
+            //events[events.length - 1] = new EndReductionEvent(field, events[events.length - 1]);
+        }
         return [matrix, events];
     }
 

@@ -27,7 +27,7 @@ export class SwapReductionEvent<E> implements ReductionEvent<E> {
         const startIndex = this.firstRowIndex < this.secondRowIndex ? this.firstRowIndex : this.secondRowIndex;
         const endIndex = this.firstRowIndex < this.secondRowIndex ? this.secondRowIndex : this.firstRowIndex;
 
-        for(let rowIndex = startIndex + 1; rowIndex < endIndex - 1; rowIndex++) {
+        for(let rowIndex = startIndex + 1; rowIndex < endIndex; rowIndex++) {
             rows[rowIndex] += "   |"
         }
         rows[this.firstRowIndex] +=  "<---";

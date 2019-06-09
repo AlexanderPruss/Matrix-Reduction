@@ -22,7 +22,7 @@ export class EndReductionEvent<E> implements ReductionEvent<E> {
     }
 
     drawMatrix<E>(matrixAsString: string): string {
-        return this.lastReductionEvent.drawMatrix(matrixAsString);
+        return matrixAsString + "     Finished!";
     }
 
     /**
