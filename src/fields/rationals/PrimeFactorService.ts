@@ -1,6 +1,10 @@
 import logger from "../../logging/Logger";
 import {FactoredNaturalNumber} from "./FactoredNaturalNumber";
+import {RationalNumber} from "./RationalNumber";
 
+/**
+ * Handles various operations involving prime factors, largely for interactions between rationals.
+ */
 export class PrimeFactorService {
 
     clone(factoredNumber: FactoredNaturalNumber) : FactoredNaturalNumber {
@@ -107,6 +111,30 @@ export class PrimeFactorService {
         commonDenominator.sort((a: number, b: number) => a - b);
 
         return [commonDenominator, firstMultiplier, secondMultiplier];
+    }
+
+    /**
+     * Reduces a rational number to simple form by cancelling out shared factors from the numerator and denominator.
+     *
+     * @param rationalNumber
+     */
+    reduce(rationalNumber: RationalNumber) : RationalNumber {
+        const numeratorFactors = [...rationalNumber.numerator.primeFactors];
+        const denominatorFactors = [...rationalNumber.denominator.primeFactors];
+
+        //Remove any shared prime factors.
+        for (const factor of numeratorFactors) {
+            const index = denominatorFactors.findIndex(number => number == factor);
+
+            if (index == -1) {
+                continue;
+            }
+            numeratorFactors.splice(index, 1);
+        }
+
+        const reducedNumerator = this.createFactoredNumberFromFactors(numeratorFactors);
+        const reducedDenominator = this.createFactoredNumberFromFactors(denominatorFactors);
+        return new RationalNumber(reducedNumerator, reducedDenominator, rationalNumber.sign);
     }
 
 }

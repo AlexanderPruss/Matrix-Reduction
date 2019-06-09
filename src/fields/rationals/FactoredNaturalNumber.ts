@@ -1,5 +1,3 @@
-import logger from "../../logging/Logger";
-
 /**
  * FactoredNaturalNumber represents a non-negative number and its prime factors.
  *

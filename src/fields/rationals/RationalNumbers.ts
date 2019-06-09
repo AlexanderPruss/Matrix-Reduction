@@ -25,7 +25,7 @@ export class RationalNumbers implements Field<RationalNumber> {
         }
         const numerator = this.primeFactorService.createFactoredNumber(numeratorValue);
 
-        return new RationalNumber(numerator, denominator, sign);
+        return this.primeFactorService.reduce(new RationalNumber(numerator, denominator, sign));
     }
 
     subtract(minus: RationalNumber, from: RationalNumber): RationalNumber {
@@ -43,7 +43,7 @@ export class RationalNumbers implements Field<RationalNumber> {
     /**
      * Multiplies two rational numbers together.
      *
-     * This could be made safer and more efficeint by first cancelling out factors, but it's done quick-and-dirty for now.
+     * This could be made safer and more efficient by first cancelling out factors, but it's done quick-and-dirty for now.
      * @param first
      * @param second
      */
@@ -52,7 +52,7 @@ export class RationalNumbers implements Field<RationalNumber> {
         const denominator = this.primeFactorService.createFactoredNumber(second.numerator.value * second.numerator.value);
         const sign = first.sign == second.sign ? Sign.POSITIVE : Sign.NEGATIVE;
 
-        return new RationalNumber(numerator, denominator, sign);
+        return this.primeFactorService.reduce(new RationalNumber(numerator, denominator, sign));
     }
 
     inverseOf(element: RationalNumber): RationalNumber {
