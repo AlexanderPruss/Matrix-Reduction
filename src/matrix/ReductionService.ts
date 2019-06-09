@@ -5,6 +5,8 @@ import {SwapReductionEvent} from "./events/SwapReductionEvent";
 import logger from "../logging/Logger";
 import {AddRowsReductionEvent} from "./events/AddRowsReductionEvent";
 import {MultiplyRowsReductionEvent} from "./events/MultiplyRowsReductionEvent";
+import {StartReductionEvent} from "./events/StartReductionEvent";
+import {EndReductionEvent} from "./events/EndReductionEvent";
 
 //I'd much rather just have the field as part of the Matrix, but this isn't doable yet due to typescript generic limitations.
 export class ReductionService {
@@ -32,7 +34,7 @@ export class ReductionService {
             let column = matrix.getColumn(columnIndex);
 
             //Find the pivot, if one exists, and move it into the diagonal
-            const pivotIndex = this.findPivot(column, field, columnIndex);
+            const pivotIndex = this.findPivot(column, field, destinationForNextPivot);
             if (pivotIndex == -1) {
                 continue;
             }
@@ -70,6 +72,12 @@ export class ReductionService {
             destinationForNextPivot++;
         }
 
+
+        if (events.length > 0) {
+            events[0] = new StartReductionEvent(field, events[0]);
+            events.push(new EndReductionEvent(field, events[events.length - 1]));
+            //events[events.length - 1] = new EndReductionEvent(field, events[events.length - 1]);
+        }
         return [matrix, events];
     }
 
@@ -81,10 +89,10 @@ export class ReductionService {
      * Returns -1 if the eligible part of the column is filled with zeroes.
      * @param column
      * @param field
-     * @param columnIndex
+     * @param initialIndex
      */
-    findPivot<E>(column: E[], field: Field<E>, columnIndex: number): number {
-        logger.info(`Finding the pivot for column ${columnIndex}`);
+    findPivot<E>(column: E[], field: Field<E>, initialIndex: number): number {
+        logger.info(`Finding the pivot for column ${initialIndex}`);
 
         //If we haven't defined a norm, just return a column with a nonzero element.
         if (!field.hasNorm()) {
@@ -92,8 +100,8 @@ export class ReductionService {
             return column.findIndex(element => !field.elementsEqual(zero, element));
         }
 
-        let largestNorm = field.norm(column[columnIndex]);
-        let pivotIndex = columnIndex;
+        let largestNorm = field.norm(column[initialIndex]);
+        let pivotIndex = initialIndex;
         for (let rowIndex = pivotIndex + 1; rowIndex < column.length; rowIndex++) {
             const norm = field.norm(column[rowIndex]);
             if (norm > largestNorm) {

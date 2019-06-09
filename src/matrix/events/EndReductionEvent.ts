@@ -21,9 +21,8 @@ export class EndReductionEvent<E> implements ReductionEvent<E> {
         return matrix;
     }
 
-    drawMatrix<E>(matrix: Matrix<E>): string {
-        //TODO: Not implemented yet
-        return "";
+    drawMatrix<E>(matrixAsString: string): string {
+        return matrixAsString + "     Finished!";
     }
 
     /**

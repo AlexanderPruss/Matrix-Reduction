@@ -22,7 +22,7 @@ describe("StartReductionEvent", () => {
 
     describe("#apply", () => {
 
-        it('does nothing, as this is the last event', function () {
+        it('passes the event into its inner event', function () {
             const resultingMatrix = startEvent.apply(matrixBefore);
 
             expect(resultingMatrix).to.eql(matrixAfter);
@@ -32,8 +32,8 @@ describe("StartReductionEvent", () => {
 
     describe("#reverse", () => {
 
-        it('does nothing, as this is the first event', function () {
-            const resultingMatrix = startEvent.reverse(matrixAfter);
+        it('passes the event into its inner event', function () {
+            const resultingMatrix = startEvent.reverse(matrixBefore);
 
             expect(resultingMatrix).to.eql(matrixAfter);
         });

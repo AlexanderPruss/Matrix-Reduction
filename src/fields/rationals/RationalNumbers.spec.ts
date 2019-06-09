@@ -1,19 +1,12 @@
-import {RationalNumber, Sign} from "./RationalNumber";
+import {Sign} from "./RationalNumber";
 import {RationalNumbers} from "./RationalNumbers";
 import {expect} from "chai";
+import {createRationalNumber} from "./test-helpers/RationalProvider.spec";
 
 describe("RationalNumbers", () => {
 
     const rationalNumbers = new RationalNumbers();
     const primeFactorService = rationalNumbers.primeFactorService;
-
-    function createRationalNumber(numerator: number, denominator: number, sign: Sign): RationalNumber {
-        return new RationalNumber(
-            primeFactorService.createFactoredNumber(numerator),
-            primeFactorService.createFactoredNumber(denominator),
-            sign
-        );
-    }
 
     describe("#add", () => {
 
@@ -168,23 +161,7 @@ describe("RationalNumbers", () => {
             expect(asString).to.eql("5/12");
 
         });
-
-        it('adds a negative sign if the sign is negative ', function () {
-            const number = createRationalNumber(5, 12, Sign.NEGATIVE);
-
-            const asString = rationalNumbers.elementToString(number);
-
-            expect(asString).to.eql("-5/12");
-        });
-
-        it('doesn\'t add the denominator if the denominator is 1', function () {
-            const number = createRationalNumber(5, 1, Sign.POSITIVE);
-
-            const asString = rationalNumbers.elementToString(number);
-
-            expect(asString).to.eql("5");
-        });
-    })
+    });
 
     describe("#hasNorm", () => {
 
@@ -199,8 +176,8 @@ describe("RationalNumbers", () => {
             const positiveNumber = createRationalNumber(5, 12, Sign.POSITIVE);
             const negativeNumber = createRationalNumber(5, 12, Sign.NEGATIVE);
 
-            expect(rationalNumbers.norm(positiveNumber)).to.eql(5/12);
-            expect(rationalNumbers.norm(negativeNumber)).to.eql(5/12);
+            expect(rationalNumbers.norm(positiveNumber)).to.eql(5 / 12);
+            expect(rationalNumbers.norm(negativeNumber)).to.eql(5 / 12);
         });
     });
 

@@ -40,7 +40,7 @@ describe("ReductionService", () => {
             const [reducedMatrix, events] = reductionService.reduce(matrix, rationalNumbers);
 
             expect(reducedMatrix).to.eql(expectedMatrix);
-            expect(events).to.have.lengthOf(8);
+            expect(events).to.have.lengthOf(9);
         });
 
         it('reduces a matrix to reduced row echelon form, handling rows of all zeroes correctly', function () {
@@ -58,7 +58,7 @@ describe("ReductionService", () => {
             const [reducedMatrix, events] = reductionService.reduce(matrix, rationalNumbers);
 
             expect(reducedMatrix).to.eql(expectedMatrix);
-            expect(events).to.have.lengthOf(8);
+            expect(events).to.have.lengthOf(9);
         });
     });
 

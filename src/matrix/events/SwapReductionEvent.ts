@@ -21,8 +21,19 @@ export class SwapReductionEvent<E> implements ReductionEvent<E> {
         return this.reductionService.swapRows(matrix, this.field, this.firstRowIndex, this.secondRowIndex)[0];
     }
 
-    drawMatrix<E>(matrix: Matrix<E>): string {
-        return ""; //TODO: not implemented yet
+    drawMatrix<E>(matrixAsString: string): string {
+        const rows = matrixAsString.split("\n");
+
+        const startIndex = this.firstRowIndex < this.secondRowIndex ? this.firstRowIndex : this.secondRowIndex;
+        const endIndex = this.firstRowIndex < this.secondRowIndex ? this.secondRowIndex : this.firstRowIndex;
+
+        for (let rowIndex = startIndex + 1; rowIndex < endIndex; rowIndex++) {
+            rows[rowIndex] += "   |"
+        }
+        rows[this.firstRowIndex] += "<---";
+        rows[this.secondRowIndex] += "<---";
+
+        return rows.join("\n");
     }
 
     reverse<F extends E>(matrix: Matrix<E>): Matrix<E> {

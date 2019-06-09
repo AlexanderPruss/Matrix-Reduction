@@ -2,6 +2,8 @@ import {RationalNumber, Sign} from "./RationalNumber";
 import {Field} from "../Field";
 import defaultPrimeFactorService, {PrimeFactorService} from "./PrimeFactorService";
 import logger from "../../logging/Logger";
+import defaultRationalParser, {RationalParser} from "./RationalParser";
+import {Parser} from "../../cli/Parser";
 
 export class RationalNumbers implements Field<RationalNumber> {
 
@@ -9,6 +11,7 @@ export class RationalNumbers implements Field<RationalNumber> {
     static ONE = new RationalNumber({value: 1, primeFactors: []}, {value: 1, primeFactors: []});
 
     primeFactorService: PrimeFactorService = defaultPrimeFactorService;
+    rationalParser: RationalParser = defaultRationalParser;
 
     add(first: RationalNumber, second: RationalNumber): RationalNumber {
         const [lcd, firstMultiplier, secondMultiplier] = this.primeFactorService.combineDenominators(
@@ -81,9 +84,7 @@ export class RationalNumbers implements Field<RationalNumber> {
     }
 
     elementToString(element: RationalNumber): string {
-        const sign = element.sign == Sign.NEGATIVE ? "-" : "";
-        const denominator = element.denominator.value == 1 ? "" : `/${element.denominator.value}`;
-        return `${sign}${element.numerator.value}${denominator}`;
+        return this.rationalParser.elementToString(element);
     }
 
     hasNorm(): boolean {
@@ -91,11 +92,15 @@ export class RationalNumbers implements Field<RationalNumber> {
     }
 
     norm(element: RationalNumber): number {
-        return element.numerator.value/element.denominator.value;
+        return element.numerator.value / element.denominator.value;
     }
 
     elementsEqual(first: RationalNumber, second: RationalNumber): boolean {
         return first.sign == second.sign && this.norm(first) == this.norm(second);
+    }
+
+    getParser(): Parser<RationalNumber> {
+        return this.rationalParser;
     }
 
 }

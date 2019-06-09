@@ -1,47 +1,28 @@
 #!/usr/bin/env node
 
 import * as readline from "readline";
-import logger from "./logging/Logger";
-
-console.log("Hi");
-let prompt = 'OHAI>';
+import {ClientEventHandler} from "./cli/ClientEventHandler";
 
 readline.emitKeypressEvents(process.stdin);
 const prompter = readline.createInterface({
     input: process.stdin,
     output: process.stdout,
-    prompt: 'OHAI> ',
+    prompt: 'Matrix: ',
     historySize: 1
 });
 
+const handler = new ClientEventHandler(prompter);
+
 process.stdin.on('keypress', (str, key) => {
-  // console.log(`Pressed str: ${str} and key: ${key.name}`);
+    handler.handleKeypress(key.name);
 });
-
-
-prompter.prompt();
 
 prompter.on('line', (line) => {
-  switch (line.trim()) {
-      case 'hello' :
-          console.log("Hi to you as well");
-          logger.info("Wut");
-          break;
-      case 'clear' :
-          console.log("Clearing");
-          console.clear();
-          break;
-      case 'ohai' :
-          prompt = `OHAI${prompt}`;
-          prompter.setPrompt(prompt);
-          break;
-      case 'stop' :
-          console.log("RUDE");
-          process.exit(1);
-          break;
-  }
-  prompter.prompt();
+    handler.handlePrompt(line);
+    prompter.prompt();
 }).on('close', () => {
-    console.log("Farewell!");
+    console.log("See you");
     process.exit(0);
 });
+
+prompter.prompt();

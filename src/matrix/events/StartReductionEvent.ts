@@ -16,9 +16,8 @@ export class StartReductionEvent<E> implements ReductionEvent<E> {
         return this.firstReductionEvent.apply(matrix);
     }
 
-    drawMatrix<E>(matrix: Matrix<E>): string {
-        //TODO: Not implemented yet
-        return "";
+    drawMatrix<E>(matrixAsString: string): string {
+        return this.firstReductionEvent.drawMatrix(matrixAsString);
     }
 
     /**
@@ -26,7 +25,7 @@ export class StartReductionEvent<E> implements ReductionEvent<E> {
      * @param matrix
      */
     reverse<F extends E>(matrix: Matrix<E>): Matrix<E> {
-        return matrix;
+        return this.firstReductionEvent.reverse(matrix);
     }
 
 }

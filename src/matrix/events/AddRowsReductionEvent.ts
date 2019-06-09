@@ -2,6 +2,7 @@ import {ReductionEvent} from "./ReductionEvent";
 import {Field} from "../../fields/Field";
 import {Matrix} from "../Matrix";
 import {ReductionService} from "../ReductionService";
+import {Parser} from "../../cli/Parser";
 
 export class AddRowsReductionEvent<E> implements ReductionEvent<E> {
     field: Field<E>;
@@ -10,6 +11,7 @@ export class AddRowsReductionEvent<E> implements ReductionEvent<E> {
     multiplier: E;
 
     reductionService: ReductionService;
+    parsingService: Parser<E>;
 
     constructor(field: Field<E>, rowIndexToAdd: number, rowIndexToAddTo: number, multiplier: E, reductionService: ReductionService) {
         this.field = field;
@@ -17,14 +19,26 @@ export class AddRowsReductionEvent<E> implements ReductionEvent<E> {
         this.rowIndexToAddTo = rowIndexToAddTo;
         this.multiplier = multiplier;
         this.reductionService = reductionService;
+        this.parsingService = field.getParser();
     }
 
     apply<F extends E>(matrix: Matrix<F>): Matrix<E> {
         return this.reductionService.addRows(matrix, this.field, this.rowIndexToAdd, this.rowIndexToAddTo, this.multiplier)[0];
     }
 
-    drawMatrix<E>(matrix: Matrix<E>): string {
-        return ""; //TODO: not implemented yet
+    drawMatrix<E>(matrixAsString: string): string {
+        const rows = matrixAsString.split("\n");
+
+        const startIndex = this.rowIndexToAdd < this.rowIndexToAddTo ? this.rowIndexToAdd : this.rowIndexToAddTo;
+        const endIndex = this.rowIndexToAdd < this.rowIndexToAddTo ? this.rowIndexToAddTo : this.rowIndexToAdd;
+
+        for (let rowIndex = startIndex + 1; rowIndex < endIndex; rowIndex++) {
+            rows[rowIndex] += "   |"
+        }
+        rows[this.rowIndexToAdd] += `---- +(${this.parsingService.elementToString(this.multiplier)})`;
+        rows[this.rowIndexToAddTo] += "<---";
+
+        return rows.join("\n");
     }
 
     reverse<F extends E>(matrix: Matrix<E>): Matrix<E> {

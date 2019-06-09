@@ -1,3 +1,5 @@
+import {Parser} from "../cli/Parser";
+
 export interface Field<Element> {
 
     add(first: Element, second: Element): Element;
@@ -34,14 +36,16 @@ export interface Field<Element> {
     multiplicativeIdentity(): Element;
 
     //TODO: This will need to move to a dedicated drawing class
-    elementToString(element: Element) : string;
+    elementToString(element: Element): string;
 
     /**
      * Whether the field has a norm defined on it.
      */
-    hasNorm() : boolean;
+    hasNorm(): boolean;
 
-    norm(element: Element) : number;
+    norm(element: Element): number;
 
-    elementsEqual(first: Element, second: Element) : boolean;
+    elementsEqual(first: Element, second: Element): boolean;
+
+    getParser(): Parser<Element>;
 }

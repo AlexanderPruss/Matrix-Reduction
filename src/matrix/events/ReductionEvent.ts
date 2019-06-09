@@ -21,5 +21,5 @@ export interface ReductionEvent<E> {
      */
     reverse<F extends E>(matrix: Matrix<E>): Matrix<E>;
 
-    drawMatrix<F extends E>(matrix: Matrix<E>): string;
+    drawMatrix<F extends E>(matrixAsString: string): string;
 }
