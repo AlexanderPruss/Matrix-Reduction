@@ -1,4 +1,5 @@
 import {FactoredNaturalNumber} from "./FactoredNaturalNumber";
+import logger from "../../logging/Logger";
 
 export class RationalNumber {
 
@@ -10,6 +11,11 @@ export class RationalNumber {
         this.numerator = numerator;
         this.denominator = denominator;
         this.sign = sign;
+        if(denominator.value == 0) {
+            const message = "Attempted to create a rational number with a denominator of zero.";
+            logger.error(message);
+            throw new Error(message);
+        }
     }
 }
 

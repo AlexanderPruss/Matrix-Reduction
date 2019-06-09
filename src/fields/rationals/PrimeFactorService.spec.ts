@@ -1,9 +1,25 @@
 import {expect} from "chai";
 import {PrimeFactorService} from "./PrimeFactorService";
+import {RationalNumber, Sign} from "./RationalNumber";
 
 describe("PrimeFactorService", () => {
 
     const primeFactorService = new PrimeFactorService();
+
+    describe("#clone", () => {
+
+        it('should return a clone (with a different reference for its factors)', function () {
+            const factoredNumber = primeFactorService.createFactoredNumberFromFactors([3, 5, 7]);
+
+            const clone = primeFactorService.clone(factoredNumber);
+
+            //change the original number, check that the clone is unaffected
+            factoredNumber.primeFactors.splice(0, 1);
+            expect(clone.primeFactors).to.eql([3, 5, 7]);
+        });
+
+    });
+
 
     describe("#factor", () => {
 
@@ -110,6 +126,71 @@ describe("PrimeFactorService", () => {
             expect(commonDenominator).to.eql([3, 5, 7]);
             expect(secondMultiplier).to.eql(3 * 5 * 7);
             expect(firstMultiplier).to.eql(1);
+        });
+
+    });
+
+    describe("#reduce", () => {
+
+        it('reduces a rational number by cancelling shared factors', function () {
+            const rationalNumber = new RationalNumber(
+                primeFactorService.createFactoredNumberFromFactors([3, 5, 7]),
+                primeFactorService.createFactoredNumberFromFactors([5, 7, 11]),
+                Sign.POSITIVE);
+            const expectedRationalNumber = new RationalNumber(
+                primeFactorService.createFactoredNumberFromFactors([3]),
+                primeFactorService.createFactoredNumberFromFactors([11]),
+                Sign.POSITIVE);
+
+            const reducedNumber = primeFactorService.reduce(rationalNumber);
+
+            expect(reducedNumber).to.eql(expectedRationalNumber);
+        });
+
+        it('has no trouble with repeated factors', function () {
+            const rationalNumber = new RationalNumber(
+                primeFactorService.createFactoredNumberFromFactors([3, 5, 5, 7, 7]),
+                primeFactorService.createFactoredNumberFromFactors([5, 7, 7, 11]),
+                Sign.NEGATIVE);
+            const expectedRationalNumber = new RationalNumber(
+                primeFactorService.createFactoredNumberFromFactors([3, 5]),
+                primeFactorService.createFactoredNumberFromFactors([11]),
+                Sign.NEGATIVE);
+
+            const reducedNumber = primeFactorService.reduce(rationalNumber);
+
+            expect(reducedNumber).to.eql(expectedRationalNumber);
+        });
+
+        it('does nothing if the numerator is zero', function () {
+            const rationalNumber = new RationalNumber(
+                primeFactorService.createFactoredNumber(0),
+                primeFactorService.createFactoredNumberFromFactors([5, 7, 7, 11]),
+                Sign.NEGATIVE);
+            const reducedNumber = primeFactorService.reduce(rationalNumber);
+
+            expect(reducedNumber).to.eql(rationalNumber);
+        });
+
+        it('does nothing if the numerator is one', function () {
+            const rationalNumber = new RationalNumber(
+                primeFactorService.createFactoredNumber(1),
+                primeFactorService.createFactoredNumberFromFactors([5, 7, 7, 11]),
+                Sign.POSITIVE);
+            const reducedNumber = primeFactorService.reduce(rationalNumber);
+
+            expect(reducedNumber).to.eql(rationalNumber);
+        });
+
+        it('does nothing if the denominator is one', function () {
+            const rationalNumber = new RationalNumber(
+                primeFactorService.createFactoredNumberFromFactors([3, 5, 5, 7, 7]),
+                primeFactorService.createFactoredNumber(1),
+                Sign.NEGATIVE);
+
+            const reducedNumber = primeFactorService.reduce(rationalNumber);
+
+            expect(reducedNumber).to.eql(rationalNumber);
         });
 
     });

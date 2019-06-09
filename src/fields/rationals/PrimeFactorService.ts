@@ -41,12 +41,12 @@ export class PrimeFactorService {
         //might as well be defensive
         if (value < 0) {
             const message = "Attempted to factor a negative natural number.";
-            logger.error("Attempted to factor a negative natural number.");
+            logger.error(message);
             throw new Error(message);
         }
         if (!Number.isInteger(value)) {
             const message = "Attempted to factor a non-integer number.";
-            logger.error("Attempted to factor a non-integer number.");
+            logger.error(message);
             throw new Error(message);
         }
 
@@ -122,14 +122,30 @@ export class PrimeFactorService {
         const numeratorFactors = [...rationalNumber.numerator.primeFactors];
         const denominatorFactors = [...rationalNumber.denominator.primeFactors];
 
-        //Remove any shared prime factors.
-        for (const factor of numeratorFactors) {
-            const index = denominatorFactors.findIndex(number => number == factor);
+        if(rationalNumber.numerator.value == 0) {
+            return new RationalNumber(
+                this.createFactoredNumber(0),
+                this.createFactoredNumberFromFactors(denominatorFactors),
+                rationalNumber.sign
+            );
+        }
 
-            if (index == -1) {
+        //Remove any shared prime factors.
+        const numeratorIndicesToRemove = [];
+        for (let numeratorIndex = 0; numeratorIndex < numeratorFactors.length; numeratorIndex++) {
+            const factor = numeratorFactors[numeratorIndex];
+            const denominatorIndex = denominatorFactors.findIndex(number => number == factor);
+
+            if (denominatorIndex == -1) {
                 continue;
             }
-            numeratorFactors.splice(index, 1);
+            denominatorFactors.splice(denominatorIndex, 1);
+            numeratorIndicesToRemove.push(numeratorIndex);
+        }
+
+        //Annoyingly low-level - the numerator index list is already sorted, it needs to be iterated in reverse order
+        for(let index = numeratorIndicesToRemove.length - 1; index >= 0; index--) {
+            numeratorFactors.splice(numeratorIndicesToRemove[index], 1);
         }
 
         const reducedNumerator = this.createFactoredNumberFromFactors(numeratorFactors);

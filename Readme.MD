@@ -16,3 +16,4 @@ https://circleci.com/gh/AlexanderPruss/Matrix-Reduction
 * Add a more intelligent way to factor a number into prime factors
 * Having better immutable types would be helpful
 * Some improvements could be made to RationalNumbers to help prevent overflow
+* Need to look into whether having non-blocking functions (more async) is relevant when the program is a CLI
