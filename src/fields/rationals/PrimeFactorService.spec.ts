@@ -170,7 +170,7 @@ describe("PrimeFactorService", () => {
             const expectedRationalNumber = new RationalNumber(
                 primeFactorService.createFactoredNumber(0),
                 primeFactorService.createFactoredNumber(1),
-                Sign.NEGATIVE);
+                Sign.POSITIVE);
             const reducedNumber = primeFactorService.reduce(rationalNumber);
 
             expect(reducedNumber).to.eql(expectedRationalNumber);
