@@ -2,6 +2,7 @@ import {RationalNumber, Sign} from "./RationalNumber";
 import {Field} from "../Field";
 import defaultPrimeFactorService, {PrimeFactorService} from "./PrimeFactorService";
 import logger from "../../logging/Logger";
+import defaultRationalParser, {RationalParser} from "./RationalParser";
 
 export class RationalNumbers implements Field<RationalNumber> {
 
@@ -9,6 +10,7 @@ export class RationalNumbers implements Field<RationalNumber> {
     static ONE = new RationalNumber({value: 1, primeFactors: []}, {value: 1, primeFactors: []});
 
     primeFactorService: PrimeFactorService = defaultPrimeFactorService;
+    rationalParser: RationalParser = defaultRationalParser;
 
     add(first: RationalNumber, second: RationalNumber): RationalNumber {
         const [lcd, firstMultiplier, secondMultiplier] = this.primeFactorService.combineDenominators(
@@ -81,9 +83,7 @@ export class RationalNumbers implements Field<RationalNumber> {
     }
 
     elementToString(element: RationalNumber): string {
-        const sign = element.sign == Sign.NEGATIVE ? "-" : "";
-        const denominator = element.denominator.value == 1 ? "" : `/${element.denominator.value}`;
-        return `${sign}${element.numerator.value}${denominator}`;
+        return this.rationalParser.elementToString(element);
     }
 
     hasNorm(): boolean {
