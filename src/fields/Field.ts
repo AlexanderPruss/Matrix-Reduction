@@ -32,4 +32,16 @@ export interface Field<Element> {
     additiveIdentity(): Element;
 
     multiplicativeIdentity(): Element;
+
+    //TODO: This will need to move to a dedicated drawing class
+    elementToString(element: Element) : string;
+
+    /**
+     * Whether the field has a norm defined on it.
+     */
+    hasNorm() : boolean;
+
+    norm(element: Element) : number;
+
+    elementsEqual(first: Element, second: Element) : boolean;
 }

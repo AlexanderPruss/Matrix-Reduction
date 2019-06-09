@@ -157,4 +157,82 @@ describe("RationalNumbers", () => {
             expect(identity).to.eql(expected);
         });
     });
+
+    describe("#elementToString", () => {
+
+        it('returns the numerator/denominator ', function () {
+            const number = createRationalNumber(5, 12, Sign.POSITIVE);
+
+            const asString = rationalNumbers.elementToString(number);
+
+            expect(asString).to.eql("5/12");
+
+        });
+
+        it('adds a negative sign if the sign is negative ', function () {
+            const number = createRationalNumber(5, 12, Sign.NEGATIVE);
+
+            const asString = rationalNumbers.elementToString(number);
+
+            expect(asString).to.eql("-5/12");
+        });
+
+        it('doesn\'t add the denominator if the denominator is 1', function () {
+            const number = createRationalNumber(5, 1, Sign.POSITIVE);
+
+            const asString = rationalNumbers.elementToString(number);
+
+            expect(asString).to.eql("5");
+        });
+    })
+
+    describe("#hasNorm", () => {
+
+        it('says that rational numbers have a norm', function () {
+            expect(rationalNumbers.hasNorm()).to.be.true;
+        });
+    });
+
+    describe("#norm", () => {
+
+        it('returns the absolute value of the numerator/denominator', function () {
+            const positiveNumber = createRationalNumber(5, 12, Sign.POSITIVE);
+            const negativeNumber = createRationalNumber(5, 12, Sign.NEGATIVE);
+
+            expect(rationalNumbers.norm(positiveNumber)).to.eql(5/12);
+            expect(rationalNumbers.norm(negativeNumber)).to.eql(5/12);
+        });
+    });
+
+
+    describe("#elementsEqual", () => {
+
+        it('returns true if the elements are identical', function () {
+            const first = createRationalNumber(5, 12, Sign.POSITIVE);
+            const second = createRationalNumber(5, 12, Sign.POSITIVE);
+
+            expect(rationalNumbers.elementsEqual(first, second)).to.be.true;
+        });
+
+        it('returns true if the elements have the same sign and identical norms', function () {
+            const first = createRationalNumber(1, 2, Sign.POSITIVE);
+            const second = createRationalNumber(3, 6, Sign.POSITIVE);
+
+            expect(rationalNumbers.elementsEqual(first, second)).to.be.true;
+        });
+
+        it('returns false if the elements have different norms', function () {
+            const first = createRationalNumber(5, 12, Sign.POSITIVE);
+            const second = createRationalNumber(5, 13, Sign.POSITIVE);
+
+            expect(rationalNumbers.elementsEqual(first, second)).to.be.false;
+        });
+
+        it('returns false if the elements have the same norm but different signs', function () {
+            const first = createRationalNumber(5, 12, Sign.POSITIVE);
+            const second = createRationalNumber(5, 12, Sign.NEGATIVE);
+
+            expect(rationalNumbers.elementsEqual(first, second)).to.be.false;
+        });
+    });
 });
