@@ -51,7 +51,7 @@ Two example matrices can be found in the `examples` folder. You could try them o
 
 `import examples/nicematrix.txt`
 
-`import examples/complicatedMatrix.txt`
+`import examples/complicatedmatrix.txt`
 
 Feel free to write your own matrices to be imported and reduced.
 
