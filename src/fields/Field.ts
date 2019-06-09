@@ -1,3 +1,5 @@
+import {Parser} from "../cli/Parser";
+
 export interface Field<Element> {
 
     add(first: Element, second: Element): Element;
@@ -44,4 +46,6 @@ export interface Field<Element> {
     norm(element: Element) : number;
 
     elementsEqual(first: Element, second: Element) : boolean;
+
+    getParser() : Parser<Element>;
 }

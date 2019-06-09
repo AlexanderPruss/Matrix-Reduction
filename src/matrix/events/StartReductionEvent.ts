@@ -16,9 +16,8 @@ export class StartReductionEvent<E> implements ReductionEvent<E> {
         return this.firstReductionEvent.apply(matrix);
     }
 
-    drawMatrix<E>(matrix: Matrix<E>): string {
-        //TODO: Not implemented yet
-        return "";
+    drawMatrix<E>(matrixAsString: string): string {
+        return this.firstReductionEvent.drawMatrix(matrixAsString);
     }
 
     /**

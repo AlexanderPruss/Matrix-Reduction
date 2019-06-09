@@ -3,6 +3,7 @@ import {Field} from "../Field";
 import defaultPrimeFactorService, {PrimeFactorService} from "./PrimeFactorService";
 import logger from "../../logging/Logger";
 import defaultRationalParser, {RationalParser} from "./RationalParser";
+import {Parser} from "../../cli/Parser";
 
 export class RationalNumbers implements Field<RationalNumber> {
 
@@ -96,6 +97,10 @@ export class RationalNumbers implements Field<RationalNumber> {
 
     elementsEqual(first: RationalNumber, second: RationalNumber): boolean {
         return first.sign == second.sign && this.norm(first) == this.norm(second);
+    }
+
+    getParser(): Parser<RationalNumber> {
+        return this.rationalParser;
     }
 
 }
