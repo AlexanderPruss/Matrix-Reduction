@@ -1,8 +1,9 @@
 import {RationalNumber, Sign} from "./RationalNumber";
 import logger from "../../logging/Logger";
 import defaultPrimeFactorService, {PrimeFactorService} from "./PrimeFactorService";
+import {Parser} from "../../cli/Parser";
 
-export class RationalParser {
+export class RationalParser implements Parser<RationalNumber>{
 
     primeFactorService: PrimeFactorService = defaultPrimeFactorService;
 

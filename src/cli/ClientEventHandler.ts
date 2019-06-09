@@ -1,11 +1,17 @@
-import {RationalNumbers} from "../fields/rationals/RationalNumbers";
+import defaultRationalNumbers, {RationalNumbers} from "../fields/rationals/RationalNumbers";
+import defaultRationalParser, {RationalParser} from "../fields/rationals/RationalParser";
 import {ReductionExecution} from "./ReductionExecution";
 import {ReadLine} from "readline";
+import defaultMatrixLoader, {MatrixLoader} from "./MatrixLoader";
 
 export class ClientEventHandler {
 
     currentExecution: ReductionExecution;
     readLine: ReadLine;
+
+    matrixLoader: MatrixLoader = defaultMatrixLoader;
+    rationalNumbers: RationalNumbers = defaultRationalNumbers;
+    rationalParser: RationalParser = defaultRationalParser;
 
     constructor(readLine: ReadLine) {
         this.readLine = readLine;
@@ -15,7 +21,10 @@ export class ClientEventHandler {
      * This currently doesn't do anything, it's a hook to allow different fields in the future.
      */
     getCurrentField() {
-        return new RationalNumbers();
+        return this.rationalNumbers;
+    }
+    getCurrentParser() {
+        return this.rationalParser;
     }
 
     handlePrompt(prompt: string) {
@@ -44,6 +53,14 @@ export class ClientEventHandler {
         }
 
         if(prompt.startsWith("import")) {
+            try {
+                const filename = prompt.split(" ")[1];
+                this.matrixLoader.importMatrix(this.rationalParser, filename);
+            }
+            catch(e) {
+                console.log(e.message);
+                return;
+            }
             this.readLine.setPrompt("Matrix [<- go back; -> go forward]: ")
             //import matrix
         }

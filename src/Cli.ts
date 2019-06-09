@@ -1,7 +1,6 @@
 #!/usr/bin/env node
 
 import * as readline from "readline";
-
 import {ClientEventHandler} from "./cli/ClientEventHandler";
 
 readline.emitKeypressEvents(process.stdin);
