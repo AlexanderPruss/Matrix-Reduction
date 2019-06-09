@@ -22,14 +22,14 @@ describe("MatrixPainter", () => {
 
         it('should shorten long entries', function () {
             const matrix = convertToRationalMatrix([
-                    [100, 2, 3],
-                    [6, 90000, 123424343434343],
-                    [7, 8, 9]
+                [100, 2, 3],
+                [6, 90000, 123424343434343],
+                [7, 8, 9]
             ]);
 
             const expected = `[ 100  2     3          ]
 [ 6    90000 1234243... ]
-[ 7    8     9          ]` +"\n";
+[ 7    8     9          ]` + "\n";
 
             expect(matrixPainter.printMatrix(matrix, parser)).to.eql(expected);
         });

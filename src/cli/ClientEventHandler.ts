@@ -1,17 +1,20 @@
 import defaultRationalNumbers, {RationalNumbers} from "../fields/rationals/RationalNumbers";
-import defaultRationalParser, {RationalParser} from "../fields/rationals/RationalParser";
 import {ReductionExecution} from "./ReductionExecution";
 import {ReadLine} from "readline";
 import defaultMatrixLoader, {MatrixLoader} from "./MatrixLoader";
+import defaultReductionService, {ReductionService} from "../matrix/ReductionService";
+import defaultMatrixPainter, {MatrixPainter} from "./MatrixPainter";
 
 export class ClientEventHandler {
 
-    currentExecution: ReductionExecution;
+    currentExecution: ReductionExecution<any>;
     readLine: ReadLine;
 
     matrixLoader: MatrixLoader = defaultMatrixLoader;
+    matrixPainter: MatrixPainter = defaultMatrixPainter;
+
     rationalNumbers: RationalNumbers = defaultRationalNumbers;
-    rationalParser: RationalParser = defaultRationalParser;
+    reductionService: ReductionService = defaultReductionService;
 
     constructor(readLine: ReadLine) {
         this.readLine = readLine;
@@ -23,15 +26,12 @@ export class ClientEventHandler {
     getCurrentField() {
         return this.rationalNumbers;
     }
-    getCurrentParser() {
-        return this.rationalParser;
-    }
 
     handlePrompt(prompt: string) {
         prompt = prompt.trim();
 
-        if(prompt.includes("-h") || prompt.includes( " h ") || prompt.includes("help")){
-             console.log(`The available commands are:
+        if (prompt.includes("-h") || prompt.includes(" h ") || prompt.includes("help")) {
+            console.log(`The available commands are:
              import {filename} - imports a matrix from the given file;
              exit              - exits the app.
              
@@ -52,48 +52,57 @@ export class ClientEventHandler {
              A new matrix can be imported with the 'import {filename} command while a matrix execution is active.`)
         }
 
-        if(prompt.startsWith("import")) {
+        if (prompt.startsWith("import")) {
             try {
                 const filename = prompt.split(" ")[1];
-                this.matrixLoader.importMatrix(this.rationalParser, filename);
-            }
-            catch(e) {
+                const matrix = this.matrixLoader.importMatrix(this.getCurrentField().getParser(), filename);
+                this.currentExecution = new ReductionExecution(matrix, this.getCurrentField(), this.matrixPainter, this.reductionService);
+            } catch (e) {
                 console.log(e.message);
                 return;
             }
-            this.readLine.setPrompt("Matrix [<- go back; -> go forward]: ")
-            //import matrix
+
+            this.readLine.setPrompt("Matrix [<- go back; -> go forward]: ");
         }
 
-        if(prompt.startsWith("exit")) {
+        if (prompt.startsWith("exit")) {
             console.log("See you");
             process.exit(0);
-        }
-
-        if(this.currentExecution == null) {
             return;
         }
 
-        if(prompt.includes("start") || prompt == "S") {
-            //go to start of the execution
+        if (this.currentExecution == null) {
+            return;
         }
 
-        if(prompt.includes("result") || prompt == "R") {
-            //go to result of execution
+        if (prompt.includes("start") || prompt == "S" || prompt == "s") {
+            this.currentExecution.goToInitialMatrix();
+            this.readLine.prompt();
+            return;
         }
 
+        if (prompt.includes("result") || prompt == "R" || prompt == "r") {
+            this.currentExecution.goToFinalMatrix();
+            this.readLine.prompt();
+            return;
+        }
+
+        console.log("Sorry, I didn't understand");
+        this.readLine.prompt();
     }
 
     handleKeypress(key: string) {
-        if(this.currentExecution == null) {
+        if (this.currentExecution == null) {
             return;
         }
 
-        switch(key) {
+        switch (key) {
             case "left":
-                //move back in execution
+                this.currentExecution.goToPreviousMatrix();
+                this.readLine.prompt();
             case "right":
-                //move forward in execution
+                this.currentExecution.goToNextMatrix();
+                this.readLine.prompt();
             default:
                 break
         }

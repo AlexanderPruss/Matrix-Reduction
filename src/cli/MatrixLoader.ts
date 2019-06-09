@@ -11,12 +11,12 @@ export class MatrixLoader {
         const bufferString = buffer.toString('utf8');
 
         const rows = [];
-        for(let line of bufferString.split('\n')) {
+        for (let line of bufferString.split('\n')) {
             const row = [];
             rows.push(row);
 
             line = line.trim();
-            for(const element of line.split(" ")) {
+            for (const element of line.split(" ")) {
                 row.push(parser.parse(element));
             }
         }
