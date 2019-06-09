@@ -7,6 +7,12 @@ export class EndReductionEvent<E> implements ReductionEvent<E> {
     field: Field<E>;
     lastReductionEvent: ReductionEvent<E>;
 
+
+    constructor(field: Field<E>, lastReductionEvent: ReductionEvent<E>) {
+        this.field = field;
+        this.lastReductionEvent = lastReductionEvent;
+    }
+
     /**
      * We can't go further than the end of the reduction.
      * @param matrix

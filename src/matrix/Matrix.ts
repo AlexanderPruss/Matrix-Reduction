@@ -10,8 +10,8 @@ export class Matrix<Element> {
         this.rows = rows;
 
         const rowLength = rows.length == 0 ? 0 : rows[0].length;
-        for(const row of rows) {
-            if(row.length != rowLength) {
+        for (const row of rows) {
+            if (row.length != rowLength) {
                 const message = "Attempted to create a matrix with rows of different length.";
                 logger.error(message);
                 throw new Error(message);
@@ -22,8 +22,8 @@ export class Matrix<Element> {
         this.numberOfRows = rows.length;
     }
 
-    getColumn(index : number) : Element[] {
-        if(index < 0 || index > this.numberOfColumns) {
+    getColumn(index: number): Element[] {
+        if (index < 0 || index > this.numberOfColumns) {
             const message = "Attempted to retrieve a nonexistent column.";
             logger.error(message);
             throw new Error(message);

@@ -6,6 +6,12 @@ export class StartReductionEvent<E> implements ReductionEvent<E> {
     field: Field<E>;
     firstReductionEvent: ReductionEvent<E>;
 
+
+    constructor(field: Field<E>, firstReductionEvent: ReductionEvent<E>) {
+        this.field = field;
+        this.firstReductionEvent = firstReductionEvent;
+    }
+
     apply<F extends E>(matrix: Matrix<E>): Matrix<E> {
         return this.firstReductionEvent.apply(matrix);
     }
