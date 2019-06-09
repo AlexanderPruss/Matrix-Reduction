@@ -45,7 +45,7 @@ export class ReductionExecution<E> {
     }
 
     goToPreviousMatrix(): string {
-        if(this.currentIndex == 0) {
+        if (this.currentIndex == 0) {
             return "";
         }
         this.currentIndex--;

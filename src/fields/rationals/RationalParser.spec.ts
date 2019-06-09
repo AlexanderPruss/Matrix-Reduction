@@ -35,13 +35,13 @@ describe("RationalParser", () => {
 
         it('throws an error if it can\'t parse a string part into a number', function () {
 
-            expect(() =>rationalParser.parse("6/beans")).to.throw(Error);
+            expect(() => rationalParser.parse("6/beans")).to.throw(Error);
 
         });
 
         it('throws an error if there are too many denominators ("/" symbols)', function () {
 
-            expect(() =>rationalParser.parse("6/4/2")).to.throw(Error);
+            expect(() => rationalParser.parse("6/4/2")).to.throw(Error);
 
         });
 

@@ -1,4 +1,4 @@
-import {RationalNumber, Sign} from "./RationalNumber";
+import {Sign} from "./RationalNumber";
 import {RationalNumbers} from "./RationalNumbers";
 import {expect} from "chai";
 import {createRationalNumber} from "./test-helpers/RationalProvider.spec";
@@ -176,8 +176,8 @@ describe("RationalNumbers", () => {
             const positiveNumber = createRationalNumber(5, 12, Sign.POSITIVE);
             const negativeNumber = createRationalNumber(5, 12, Sign.NEGATIVE);
 
-            expect(rationalNumbers.norm(positiveNumber)).to.eql(5/12);
-            expect(rationalNumbers.norm(negativeNumber)).to.eql(5/12);
+            expect(rationalNumbers.norm(positiveNumber)).to.eql(5 / 12);
+            expect(rationalNumbers.norm(negativeNumber)).to.eql(5 / 12);
         });
     });
 

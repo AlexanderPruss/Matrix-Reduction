@@ -101,13 +101,13 @@ export class ClientEventHandler {
         switch (key) {
             case "left":
                 result = this.currentExecution.goToPreviousMatrix();
-                if(result != ""){
+                if (result != "") {
                     this.readLine.prompt();
                 }
                 break;
             case "right":
                 result = this.currentExecution.goToNextMatrix();
-                if(result != ""){
+                if (result != "") {
                     this.readLine.prompt();
                 }
                 break;

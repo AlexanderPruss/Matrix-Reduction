@@ -92,7 +92,7 @@ export class RationalNumbers implements Field<RationalNumber> {
     }
 
     norm(element: RationalNumber): number {
-        return element.numerator.value/element.denominator.value;
+        return element.numerator.value / element.denominator.value;
     }
 
     elementsEqual(first: RationalNumber, second: RationalNumber): boolean {

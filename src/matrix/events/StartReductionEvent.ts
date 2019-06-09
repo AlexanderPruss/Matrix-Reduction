@@ -25,7 +25,7 @@ export class StartReductionEvent<E> implements ReductionEvent<E> {
      * @param matrix
      */
     reverse<F extends E>(matrix: Matrix<E>): Matrix<E> {
-        return matrix;
+        return this.firstReductionEvent.reverse(matrix);
     }
 
 }
