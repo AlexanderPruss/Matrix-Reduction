@@ -80,6 +80,14 @@ export class RationalNumbers implements Field<RationalNumber> {
         return RationalNumbers.ONE;
     }
 
+    elementToString(element: RationalNumber): string {
+        const sign = element.sign == Sign.NEGATIVE ? "-" : "";
+        const denominator = element.denominator.value == 1 ? "" : `/${element.denominator.value}`;
+        return `${sign}${element.numerator.value}${denominator}`;
+    }
+
+
+
 }
 
 export default new RationalNumbers();

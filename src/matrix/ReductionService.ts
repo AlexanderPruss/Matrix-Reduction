@@ -1,6 +1,6 @@
 import {Matrix} from "./Matrix";
 import {Field} from "../fields/Field";
-import {ReductionEvent} from "./ReductionEvent";
+import {ReductionEvent} from "./events/ReductionEvent";
 
 //I'd much rather just have the field as part of the Matrix, but this isn't doable yet due to typescript generic limitations.
 export class ReductionService{

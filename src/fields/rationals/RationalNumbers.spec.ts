@@ -157,4 +157,32 @@ describe("RationalNumbers", () => {
             expect(identity).to.eql(expected);
         });
     });
+
+    describe("#elementToString", () => {
+
+        it('returns the numerator/denominator ', function () {
+            const number = createRationalNumber(5, 12, Sign.POSITIVE);
+
+            const asString = rationalNumbers.elementToString(number);
+
+            expect(asString).to.eql("5/12");
+
+        });
+
+        it('adds a negative sign if the sign is negative ', function () {
+            const number = createRationalNumber(5, 12, Sign.NEGATIVE);
+
+            const asString = rationalNumbers.elementToString(number);
+
+            expect(asString).to.eql("-5/12");
+        });
+
+        it('doesn\'t add the denominator if the denominator is 1' ,function () {
+            const number = createRationalNumber(5, 1, Sign.POSITIVE);
+
+            const asString = rationalNumbers.elementToString(number);
+
+            expect(asString).to.eql("5");
+        });
+    })
 });
